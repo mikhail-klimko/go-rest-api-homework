@@ -72,7 +72,12 @@ func postTasks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tasks[task.ID] = task
+	if _, exists := tasks[task.ID]; exists {
+		w.WriteHeader(http.StatusConflict)
+		return
+	} else {
+		tasks[task.ID] = task
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
